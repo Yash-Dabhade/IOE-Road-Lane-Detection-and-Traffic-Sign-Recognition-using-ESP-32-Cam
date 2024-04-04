@@ -1,15 +1,22 @@
 from pymongo import MongoClient
-from gridfs import GridFS
+from datetime import date, datetime
 
 client = MongoClient('mongodb+srv://sumant-dusane:sumant123456@sumant-dusane.3donyvz.mongodb.net/?retryWrites=true&w=majority')
 db = client['iot-marketplace']
 collection = db['datasets']
-fs = (GridFS(db, collection="datasets"))
 
-def upload_file(file):
-    if file:
-        filename = str(file.name)[6:].replace("/","")
-       
-        file_data = file.read()
-        file_id = fs.put(file_data, filename=filename)
-        print(file_id)
+
+def upload_file(files):
+    if files:
+        binary_files = []
+        for filepath in files:
+            with open(filepath, 'rb') as f:
+                binary_data = f.read()
+                binary_files.append(binary_data)
+                f.close()
+        
+        collection.insert_one({
+            'title': 'Dataset of ' + str(date.today()),
+            'data': binary_files,
+            'timestamp': datetime.now(),
+        })

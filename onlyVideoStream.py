@@ -146,13 +146,12 @@ while True:
     key=cv2.waitKey(5)
     if key==ord('q'):
         folder_path = './data'
+        files = []
         for filename in os.listdir(folder_path):
-            # print(filename)
             if filename.endswith('.jpg') or filename.endswith('.png'):
                 file_path = os.path.join(folder_path, filename)
-                files = open(file_path, 'rb')
-                print(files)
-                upload_file(files)
+                files.append(file_path)
+        upload_file(files)
         break
     
 
